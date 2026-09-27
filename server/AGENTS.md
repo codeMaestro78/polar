@@ -146,7 +146,7 @@ resource = ResourceService()
 
 ```python
 # polar/{module}/endpoints.py
-from polar.kit.pagination import ListResource, Pagination, PaginationParamsQuery
+from polar.kit.pagination import ListResource, PaginationParamsQuery
 
 router = APIRouter(prefix="/resources", tags=["resources"])
 
@@ -161,9 +161,7 @@ async def list_resources(
     results, count = await resource_service.list(
         session, auth_subject, pagination=pagination, sorting=sorting
     )
-    return ListResource(
-        items=results, pagination=Pagination(page=pagination.page, total_count=count)
-    )
+    return ListResource.from_paginated_results(results, count, pagination)
 
 
 @router.post("/", response_model=ResourceSchema, status_code=201)
